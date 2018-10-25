@@ -1,12 +1,9 @@
 package com.ilya.de.math.graph;
 
-import com.ilya.de.math.evaluator.EulerEvaluator;
 import com.ilya.de.math.evaluator.RungeKuttaEvaluator;
 import com.ilya.de.math.function.Function2;
 import com.ilya.de.math.function.Graph;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.util.LinkedList;
 
 @Deprecated
 public class RungeKuttaGraphProvider implements GraphProvider {
@@ -26,6 +23,11 @@ public class RungeKuttaGraphProvider implements GraphProvider {
     @Override
     public Graph getGraph() {
         throw new NotImplementedException();
+    }
+
+    @Override
+    public String getName() {
+        return "deprecated";
     }
 
 }

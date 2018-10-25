@@ -2,28 +2,19 @@ package com.ilya.de.math.graph;
 
 import com.ilya.de.math.evaluator.Y0AcceptingEvaluator;
 import com.ilya.de.math.function.Function2;
-import com.ilya.de.math.function.Graph;
 
-public class FunctionGraphProviderWithY0 implements GraphProvider {
+public class FunctionGraphProviderWithY0 extends FunctionGraphProvider {
 
-    private final Y0AcceptingEvaluator evaluator;
-    private Graph cached;
-
-    public <T extends Y0AcceptingEvaluator> FunctionGraphProviderWithY0(T evaluator, double y0, double startX,
+    public <T extends Y0AcceptingEvaluator> FunctionGraphProviderWithY0(String name, T evaluator, double y0, double startX,
                                                                         double endX, double step, Function2 function) {
-        this.evaluator = evaluator;
-        evaluator.setFunction(function);
-        evaluator.setInterval(startX, endX);
-        evaluator.setStep(step);
+        super(evaluator, startX, endX, step, function);
         evaluator.setY0(y0);
     }
 
-    @Override
-    public Graph getGraph() {
-        if (cached == null) {
-            cached = new Graph(evaluator.evaluate());
-        }
-        return cached;
+    public <T extends Y0AcceptingEvaluator> FunctionGraphProviderWithY0(T evaluator, double y0, double startX,
+                                                                        double endX, double step, Function2 function) {
+        super(evaluator,startX,endX,step,function);
+        evaluator.setY0(y0);
     }
 
 }

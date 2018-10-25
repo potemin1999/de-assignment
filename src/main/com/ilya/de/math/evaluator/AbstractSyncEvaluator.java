@@ -1,6 +1,5 @@
 package com.ilya.de.math.evaluator;
 
-import com.ilya.de.math.function.Graph;
 import com.ilya.de.math.graph.Point;
 import lombok.Setter;
 
@@ -14,9 +13,7 @@ public abstract class AbstractSyncEvaluator extends AbstractEvaluator {
 
     protected double tryToSynchronize(double currentX) {
         if (syncEvaluator == null) return Double.NaN;
-        Graph graphs = syncEvaluator.getGraph();
-        if (graphs == null) return Double.NaN;
-        List<Point> points = graphs.getPoints();
+        List<Point> points = syncEvaluator.evaluate();
         Iterator<Point> iterator = points.iterator();
         Point p1 = null, p2 = null;
         while (iterator.hasNext()) {

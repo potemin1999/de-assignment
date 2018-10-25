@@ -9,7 +9,7 @@ public class Tokenizer {
     }
 
     public List<Token> parse(String str) throws InvalidTokenException {
-        List<Token> tokens = new PrintableLinkedList<Token>();
+        List<Token> tokens = new PrintableLinkedList<>();
         char[] chars = str.toCharArray();
         StringBuilder buffer = new StringBuilder();
         for (char aChar : chars) {

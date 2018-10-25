@@ -17,8 +17,8 @@ public class FunctionDifferenceEvaluator extends AbstractEvaluator {
 
     @Override
     public List<Point> evaluate() {
-        List<Point> aPoints = evaluatorA.getGraph().getPoints();
-        List<Point> bPoints = evaluatorB.getGraph().getPoints();
+        List<Point> aPoints = evaluatorA.evaluate();
+        List<Point> bPoints = evaluatorB.evaluate();
         int size = Math.min(aPoints.size(), bPoints.size());
         List<Point> points = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {

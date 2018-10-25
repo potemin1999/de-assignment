@@ -23,4 +23,9 @@ public class EulerGraphProvider implements GraphProvider {
     public Graph getGraph() {
         throw new NotImplementedException();
     }
+
+    @Override
+    public String getName() {
+        return "deprecated";
+    }
 }

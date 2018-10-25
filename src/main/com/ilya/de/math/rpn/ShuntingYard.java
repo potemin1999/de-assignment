@@ -10,7 +10,7 @@ public class ShuntingYard {
 
     public List<Token> convertToRPN(List<Token> input) {
         List<Token> stack = new ArrayList<>(input.size());
-        List<Token> output = new PrintableLinkedList<Token>();
+        List<Token> output = new PrintableLinkedList<>();
         for (Token token : input) {
             if (token.isFunction()) {
                 stack.add(token);

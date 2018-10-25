@@ -44,7 +44,7 @@ public class Test1 {
     public void z_speedComparison(){
         String func = "(sin(y) + exp(6*x)+cos(y))/(22*sin(x)+45)";
         Function2 func1 = Function2Generator.gen(func);
-        Function2 func2 = (Function2) (x,y) -> (Math.sin(y) + Math.exp(6*x)+Math.cos(y))/(22*Math.sin(x)+45);
+        Function2 func2 = (x,y) -> (Math.sin(y) + Math.exp(6*x)+Math.cos(y))/(22*Math.sin(x)+45);
         for (int i = 0; i < 100; i++) {
             func1.func(i,i);
             func2.func(i,i);

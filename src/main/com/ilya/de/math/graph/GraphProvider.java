@@ -6,4 +6,6 @@ public interface GraphProvider {
 
     Graph getGraph();
 
+    String getName();
+
 }

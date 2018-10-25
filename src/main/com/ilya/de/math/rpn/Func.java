@@ -3,8 +3,6 @@ package com.ilya.de.math.rpn;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.function.Predicate;
-
 @SuppressWarnings("WeakerAccess")
 @AllArgsConstructor
 public class Func {

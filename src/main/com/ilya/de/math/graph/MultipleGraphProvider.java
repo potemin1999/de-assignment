@@ -41,4 +41,9 @@ public class MultipleGraphProvider implements GraphProvider {
         return graphs[0];
     }
 
+    @Override
+    public String getName() {
+        return "deprecated";
+    }
+
 }

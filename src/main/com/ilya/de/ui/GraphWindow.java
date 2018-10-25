@@ -13,7 +13,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class GraphWindow {
 
-    interface OnResizeListener {
+    public interface OnResizeListener {
         void onResize(double newWidth, double newHeight);
     }
 
@@ -25,7 +25,9 @@ public class GraphWindow {
     @Setter
     private Parent rootView;
 
+    @Getter
     private double width = 640.0;
+    @Getter
     private double height = 480.0;
 
     private final List<OnResizeListener> onResizeListenerList;

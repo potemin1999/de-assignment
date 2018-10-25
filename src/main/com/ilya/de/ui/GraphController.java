@@ -16,7 +16,6 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -48,6 +47,12 @@ public class GraphController {
     public void addGraphProvider(GraphProvider graphProvider, Color color) {
         graphProviders.add(graphProvider);
         graphColors.add(color);
+    }
+
+    public void onCanvasResized(double width,double height){
+        canvasWidth = width;
+        canvasHeight = height;
+        drawGraph();
     }
 
     public void removeGraphProvider(GraphProvider graphProvider) {
@@ -91,8 +96,6 @@ public class GraphController {
 
     private void drawCoordinates(GraphicsContext context) {
         context.setLineWidth(1.0);
-        context.strokeText(center.toString(), 10, 10);
-        context.strokeText("Zoom: " + zoom, 10, 30);
         drawCoordinateAxisAndGrid(context);
     }
 
@@ -139,13 +142,8 @@ public class GraphController {
         while (iterator.hasNext()) {
             Point endPoint = iterator.next();
             double[] endPointCoordinates = {convertFromGraphX(endPoint.getX()), convertFromGraphY(endPoint.getY())};
-
-            //if (!(isStartCulled && isEndCulled)) {
-            //if (Math.abs(startPointCoordinates[1]-endPointCoordinates[1]) < 50000d){
             context.strokeLine(startPointCoordinates[0], startPointCoordinates[1],
                     endPointCoordinates[0], endPointCoordinates[1]);
-            //}
-            //}
             startPointCoordinates = endPointCoordinates;
         }
     }
