@@ -1,5 +1,8 @@
 package com.ilya.de;
 
+import com.ilya.de.math.evaluator.EulerEvaluator;
+import com.ilya.de.math.evaluator.FunctionEvaluator;
+import com.ilya.de.math.evaluator.ImprovedEulerEvaluator;
 import com.ilya.de.math.function.Function2;
 import com.ilya.de.math.graph.*;
 import com.ilya.de.math.function.Function2Generator;
@@ -28,17 +31,19 @@ public class Main extends Application {
         window.setRootView(windowContent.getParent());
         window.show();
         double step = 0.01;
+        Function2 solution = Function2Generator.gen("1/(0-4.498309818-x) + exp(x)");
         Function2 func = Function2Generator.gen("(1-2*y)*exp(x) + y*y + exp(2*x)");
-        GraphProvider provider = new MultipleGraphProvider()
-                .add(new EulerGraphProvider(2, -5, 0, step, func))
-                //.add(new RungeKuttaGraphProvider(2, -5, 0, step, funcDer))
-                //.add(new FunctionGraphProvider(-5, 0, step, funcExact))
-                .colors(new Color[]{
-                        //Color.BLACK,
-                        Color.BLACK,
-                        //Color.RED
-                });
-        controller.setGraphProvider(provider);
+
+        GraphProvider eulerGraphProvider = new FunctionGraphProviderWithY0(
+                new EulerEvaluator(), 2, -5, 0, step, func);
+        GraphProvider improvedEulerGraphProvider = new FunctionGraphProviderWithY0(
+                new ImprovedEulerEvaluator(), 2, -5, 0, step, func);
+        GraphProvider exactSolution = new FunctionGraphProvider(
+                new FunctionEvaluator(), -5, 0, step, solution);
+
+        controller.addGraphProvider(eulerGraphProvider, Color.RED);
+        controller.addGraphProvider(improvedEulerGraphProvider, Color.BLACK);
+        controller.addGraphProvider(exactSolution, Color.GREEN);
         controller.drawGraph();
     }
 

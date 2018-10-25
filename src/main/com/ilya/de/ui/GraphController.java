@@ -14,7 +14,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -24,9 +26,8 @@ public class GraphController {
     private Canvas graphView;
     private GraphicsContext graphicsContext;
 
-    @Getter
-    @Setter
-    private GraphProvider graphProvider;
+    private List<GraphProvider> graphProviders = new ArrayList<>(16);
+    private List<Color> graphColors = new ArrayList<>(16);
 
     @Getter
     @Setter
@@ -43,6 +44,18 @@ public class GraphController {
 
     private double canvasWidth = 0;
     private double canvasHeight = 0;
+
+    public void addGraphProvider(GraphProvider graphProvider, Color color) {
+        graphProviders.add(graphProvider);
+        graphColors.add(color);
+    }
+
+    public void removeGraphProvider(GraphProvider graphProvider) {
+        int index = graphProviders.indexOf(graphProvider);
+        if (index == -1) return;
+        graphProviders.remove(index);
+        graphColors.remove(index);
+    }
 
     public void setGraphView(Canvas graphView) {
         this.graphView = graphView;
@@ -67,11 +80,12 @@ public class GraphController {
         context.setStroke(Color.BLACK);
         context.setLineWidth(2.0);
         drawCoordinates(context);
-        if (graphProvider != null) {
-            Graph[] graphs = graphProvider.getGraphs();
-            for (Graph graph : graphs) {
-                drawGraphPoints(graphicsContext, graph);
-            }
+        Iterator<GraphProvider> providerIterator = graphProviders.iterator();
+        Iterator<Color> colorIterator = graphColors.iterator();
+        while (providerIterator.hasNext()) {
+            GraphProvider provider = providerIterator.next();
+            Color color = colorIterator.next();
+            drawGraphPoints(context, provider.getGraph(), color);
         }
     }
 
@@ -115,12 +129,11 @@ public class GraphController {
         context.setLineWidth(2.0);
     }
 
-    private void drawGraphPoints(GraphicsContext context, Graph graph) {
-        assert graphProvider != null;
+    private void drawGraphPoints(GraphicsContext context, Graph graph, Color color) {
         List<Point> points = graph.getPoints();
         Iterator<Point> iterator = points.iterator();
         if (!iterator.hasNext()) return;
-        context.setStroke(graph.getColor());
+        context.setStroke(color);
         Point startPoint = iterator.next();
         double[] startPointCoordinates = {convertFromGraphX(startPoint.getX()), convertFromGraphY(startPoint.getY())};
         while (iterator.hasNext()) {
@@ -140,6 +153,7 @@ public class GraphController {
     private void handleMousePressed(MouseEvent event) {
         clickLastX = event.getX();
         clickLastY = event.getY();
+        graphView.requestFocus();
     }
 
     @SuppressWarnings({"EmptyMethod", "unused"})

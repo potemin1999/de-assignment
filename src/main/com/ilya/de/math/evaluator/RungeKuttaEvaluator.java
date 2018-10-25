@@ -6,13 +6,13 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RungeKuttaEvaluator extends Evaluator {
+public class RungeKuttaEvaluator extends AbstractEvaluator implements Y0AcceptingEvaluator {
 
     @Setter
     protected double y0 = 0;
 
     @Override
-    protected List<Point> evaluate() {
+    public List<Point> evaluate() {
         ArrayList<Point> points = new ArrayList<>((int) Math.ceil((maxX - minX) / step));
         double currentX = minX;
         double lastY = y0;

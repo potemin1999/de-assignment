@@ -3,15 +3,15 @@ package com.ilya.de.math.graph;
 import com.ilya.de.math.evaluator.EulerEvaluator;
 import com.ilya.de.math.function.Function2;
 import com.ilya.de.math.function.Graph;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+@Deprecated
 public class EulerGraphProvider implements GraphProvider {
 
     private final EulerEvaluator evaluator;
-    private final Graph[] graps;
 
     @SuppressWarnings("SameParameterValue")
     public EulerGraphProvider(double y0, double x0, double X, double step, Function2 function) {
-        graps = new Graph[1];
         evaluator = new EulerEvaluator();
         evaluator.setY0(y0);
         evaluator.setInterval(x0, X);
@@ -20,7 +20,7 @@ public class EulerGraphProvider implements GraphProvider {
     }
 
     @Override
-    public Graph[] getGraphs() {
-        return evaluator.getGraphs();
+    public Graph getGraph() {
+        throw new NotImplementedException();
     }
 }

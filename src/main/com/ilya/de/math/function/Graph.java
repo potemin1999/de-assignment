@@ -15,9 +15,5 @@ public class Graph {
     @Setter
     private List<Point> points;
 
-    @Getter
-    @Setter
-    private Color color;
-
 
 }

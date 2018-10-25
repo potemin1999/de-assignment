@@ -4,7 +4,11 @@ import com.ilya.de.math.evaluator.EulerEvaluator;
 import com.ilya.de.math.evaluator.RungeKuttaEvaluator;
 import com.ilya.de.math.function.Function2;
 import com.ilya.de.math.function.Graph;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.LinkedList;
+
+@Deprecated
 public class RungeKuttaGraphProvider implements GraphProvider {
 
     private final RungeKuttaEvaluator evaluator;
@@ -20,8 +24,8 @@ public class RungeKuttaGraphProvider implements GraphProvider {
     }
 
     @Override
-    public Graph[] getGraphs() {
-        return evaluator.getGraphs();
+    public Graph getGraph() {
+        throw new NotImplementedException();
     }
 
 }

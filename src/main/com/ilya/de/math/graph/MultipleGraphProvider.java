@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import java.util.LinkedList;
 import java.util.List;
 
+@Deprecated
 public class MultipleGraphProvider implements GraphProvider {
 
     private Graph[] graphs;
@@ -30,22 +31,14 @@ public class MultipleGraphProvider implements GraphProvider {
     public MultipleGraphProvider colors(Color[] colors) {
         int counter = 0;
         for (GraphProvider provider : providers) {
-            provider.getGraphs()[0].setColor(colors[counter++]);
+            //do nothing
         }
         return this;
     }
 
     @Override
-    public Graph[] getGraphs() {
-        if (providers.size() == 0) {
-            return new Graph[0];
-        } else {
-            int counter = 0;
-            for (GraphProvider provider : providers) {
-                graphs[counter++] = provider.getGraphs()[0];
-            }
-            return graphs;
-        }
+    public Graph getGraph() {
+        return graphs[0];
     }
 
 }

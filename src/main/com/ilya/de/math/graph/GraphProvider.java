@@ -4,6 +4,6 @@ import com.ilya.de.math.function.Graph;
 
 public interface GraphProvider {
 
-    Graph[] getGraphs();
+    Graph getGraph();
 
 }
