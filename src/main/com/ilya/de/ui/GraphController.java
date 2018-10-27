@@ -49,9 +49,11 @@ public class GraphController {
         graphColors.add(color);
     }
 
-    public void onCanvasResized(double width,double height){
+    public void onCanvasResized(double width, double height) {
         canvasWidth = width;
         canvasHeight = height;
+        graphView.setWidth(width);
+        graphView.setHeight(height);
         drawGraph();
     }
 
@@ -60,6 +62,16 @@ public class GraphController {
         if (index == -1) return;
         graphProviders.remove(index);
         graphColors.remove(index);
+    }
+
+    public boolean removeGraphProviderByName(String name) {
+        for (GraphProvider provider : graphProviders) {
+            if (name.equals(provider.getName())) {
+                graphProviders.remove(provider);
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setGraphView(Canvas graphView) {

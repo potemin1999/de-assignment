@@ -8,6 +8,8 @@ import java.util.List;
 
 public class RungeKuttaEvaluator extends AbstractEvaluator implements Y0AcceptingEvaluator {
 
+    public static final String NAME = "Runge-Kutta";
+
     @Setter
     protected double y0 = 0;
 

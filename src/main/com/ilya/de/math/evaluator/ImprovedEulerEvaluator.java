@@ -10,6 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 public class ImprovedEulerEvaluator extends AbstractEvaluator implements Y0AcceptingEvaluator {
 
+    public static final String NAME = "Improved Euler";
+
     @Setter
     protected double y0 = 0;
 
