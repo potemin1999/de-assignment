@@ -13,7 +13,7 @@ public class Test2 {
         GraphProvider provider = new FunctionGraphProviderWithY0(
                 new EulerEvaluator(), 2, -5, 0, 0.09,
                 Function2Generator.gen("(1-2*y)*exp(x) + y*y + exp(2*x)"));
-        Graph graph = provider.getGraph();
+        Graph graph = provider.getGraph(true);
     }
 
     @Test
@@ -21,7 +21,7 @@ public class Test2 {
         GraphProvider provider = new FunctionGraphProviderWithY0(
                 new RungeKuttaEvaluator(), 2, -5, 0, 0.09,
                 Function2Generator.gen("(1-2*y)*exp(x) + y*y + exp(2*x)"));
-        Graph graph = provider.getGraph();
+        Graph graph = provider.getGraph(true);
     }
 
 }

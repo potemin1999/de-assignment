@@ -30,9 +30,14 @@ public class FunctionGraphProvider implements GraphProvider {
     }
 
     @Override
-    public Graph getGraph() {
-        if (cached == null) {
-            cached = new Graph(evaluator.evaluate());
+    public Graph getGraph(boolean redraw) {
+        if (redraw || cached == null) {
+            try {
+                cached = new Graph(evaluator.evaluate());
+            }catch(Throwable throwable){
+                throwable.printStackTrace();
+                System.err.println("problem with evaluator:"+evaluator.toString());
+            }
         }
         return cached;
     }

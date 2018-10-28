@@ -24,7 +24,7 @@ public class FunctionDifferenceEvaluator extends AbstractEvaluator {
         for (int i = 0; i < size; i++) {
             Point a = aPoints.get(i);
             Point b = bPoints.get(i);
-            points.add(new Point(a.getX() - b.getX(), a.getY() - b.getY()));
+            points.add(new Point(a.getX(), a.getY() - b.getY()));
         }
         return points;
     }

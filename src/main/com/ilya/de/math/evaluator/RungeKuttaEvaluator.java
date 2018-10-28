@@ -6,7 +6,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RungeKuttaEvaluator extends AbstractEvaluator implements Y0AcceptingEvaluator {
+public class RungeKuttaEvaluator extends AbstractSyncEvaluator implements Y0AcceptingEvaluator {
 
     public static final String NAME = "Runge-Kutta";
 
@@ -20,6 +20,9 @@ public class RungeKuttaEvaluator extends AbstractEvaluator implements Y0Acceptin
         double lastY = y0;
         points.add(new Point(currentX, lastY));
         while (currentX <= maxX) {
+            if (!Double.isFinite(lastY)){
+                lastY = tryToSynchronize(currentX);
+            }
             double x = currentX;
             double y = lastY;
             double k1 = step * function.func(x, y);

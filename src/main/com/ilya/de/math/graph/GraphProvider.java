@@ -4,7 +4,7 @@ import com.ilya.de.math.function.Graph;
 
 public interface GraphProvider {
 
-    Graph getGraph();
+    Graph getGraph(boolean redraw);
 
     String getName();
 

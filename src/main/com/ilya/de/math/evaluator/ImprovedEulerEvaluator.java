@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-public class ImprovedEulerEvaluator extends AbstractEvaluator implements Y0AcceptingEvaluator {
+public class ImprovedEulerEvaluator extends AbstractSyncEvaluator implements Y0AcceptingEvaluator {
 
     public static final String NAME = "Improved Euler";
 
@@ -22,6 +22,9 @@ public class ImprovedEulerEvaluator extends AbstractEvaluator implements Y0Accep
         double tempY = 0;
         points.add(new Point(currentX, lastY));
         while (currentX <= maxX) {
+            if (!Double.isFinite(lastY)){
+                lastY = tryToSynchronize(currentX);
+            }
             tempY = lastY + step * function.func(currentX, lastY);
             lastY = lastY + step *
                     (function.func(currentX, lastY) + function.func(currentX + step, tempY)) * 0.5;

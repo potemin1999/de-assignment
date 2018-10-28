@@ -2,13 +2,18 @@ package com.ilya.de.ui;
 
 import com.ilya.de.math.graph.GraphProvider;
 import javafx.beans.value.ChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.InputEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -16,6 +21,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 public class WindowContent {
 
@@ -24,7 +30,11 @@ public class WindowContent {
     }
 
     public interface OnDataInputChangeListener {
-        void onDataChanged(double oldValue, double newValue);
+        void onDataChanged(double newValue);
+    }
+
+    public interface OnFunctionChangeListener{
+        void onFunctionChanged(String newFunction);
     }
 
     private final Pane parent;
@@ -38,10 +48,20 @@ public class WindowContent {
     @Getter
     private double toolbarWidth;
 
+    @Getter
     private TextField solutionFuncField;
+    @Getter
     private TextField sourceFuncField;
 
+    @Getter
+    @Setter
+    private OnFunctionChangeListener solutionChangeListener;
+    @Getter
+    @Setter
+    private OnFunctionChangeListener sourceChangeListener;
+
     private Pane graphsContainer;
+    private Pane dataContainer;
 
     public WindowContent(double initialWidth, double initialHeight) {
         toolbarWidth = 320;
@@ -59,7 +79,6 @@ public class WindowContent {
     private void fillToolbar(Pane toolbar) {
         title = new Text();
         title.setText("Toolbar");
-        toolbar.getChildren().add(title);
         fillFunctions(toolbar);
         fillGraphs(toolbar);
         fillData(toolbar);
@@ -74,6 +93,10 @@ public class WindowContent {
         solutionFuncDescription.setFont(Font.font("monospaced"));
         solutionFuncField = new TextField();
         solutionFuncField.setPrefWidth(toolbarWidth);
+        solutionFuncField.setOnAction(event -> {
+            if (solutionChangeListener==null) return;
+            solutionChangeListener.onFunctionChanged(solutionFuncField.getCharacters().toString());
+        });
         solutionFuncBox.getChildren().add(solutionFuncDescription);
         solutionFuncBox.getChildren().add(solutionFuncField);
         functionsBox.getChildren().add(solutionFuncBox);
@@ -100,6 +123,7 @@ public class WindowContent {
         VBox dataBox = new VBox();
         dataBox.getChildren().add(createSubTitle("DATA"));
         toolbar.getChildren().add(dataBox);
+        dataContainer = dataBox;
     }
 
     public Pane createSubTitle(String title) {
@@ -112,8 +136,43 @@ public class WindowContent {
         return titleContainer;
     }
 
-    public void addDataInput(String name, double initialValue, double minValue, double maxValue, double step,
+    public void addDataInput(String nameStr, double initialValue, double minValue, double maxValue, double step,
                              OnDataInputChangeListener listener) {
+        HBox content = new HBox();
+        Text name = new Text(nameStr);
+        TextField field = new TextField(String.format("%f",initialValue));
+        field.setPrefWidth(toolbarWidth);
+        field.setOnAction(event -> {
+            updateDataValue(field,0,minValue,maxValue,listener);
+        });
+        Button minusValue = new Button("-");
+        minusValue.setOnMouseClicked((event) -> {
+            updateDataValue(field,-step,minValue,maxValue,listener);
+        });
+        Button plusValue = new Button("+");
+        plusValue.setOnMouseClicked((event) -> {
+            updateDataValue(field,step,minValue,maxValue,listener);
+        });
+        content.getChildren().add(name);
+        content.getChildren().add(field);
+        content.getChildren().add(minusValue);
+        content.getChildren().add(plusValue);
+        dataContainer.getChildren().add(content);
+    }
+
+    private void updateDataValue(TextField source,double change,double min,double max,
+                                 OnDataInputChangeListener listener){
+        if (listener==null) return;
+        double value = Double.NaN;
+        try{
+            value = Double.parseDouble(source.getCharacters().toString());
+        }catch (Throwable throwable){
+
+        }
+        if (Double.isNaN(value)) return;
+        double result = Math.min(max, Math.max(min,value+change));
+        listener.onDataChanged(result);
+        source.setText(String.format("%f",result));
     }
 
     public void addGraphOption(String text, Color color, GraphProvider provider,
