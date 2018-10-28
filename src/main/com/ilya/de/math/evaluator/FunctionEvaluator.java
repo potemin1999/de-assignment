@@ -20,7 +20,7 @@ public class FunctionEvaluator extends AbstractEvaluator {
 
     public void setStep(double step) {
         super.setStep(step);
-        continuityLimit = 1000 * step;
+        continuityLimit = 1 / step;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class FunctionEvaluator extends AbstractEvaluator {
         Point startP = new Point(minX, function.func(minX, 0));
         points.add(startP);
         double prevY = startP.getY();
-        for (double x = minX + step; x < maxX+step; x += step) {
+        for (double x = minX + step; x < maxX + step; x += step) {
             Point p = new Point(x, function.func(x, 0));
             if (useDiscontinuityCheck && Math.abs(p.getY() - prevY) > continuityLimit) {
                 Point p2 = new Point(x - step * 0.5, function.func(x - step * 0.5, 0));

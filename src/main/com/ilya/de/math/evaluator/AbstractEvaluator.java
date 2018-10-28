@@ -21,9 +21,9 @@ public abstract class AbstractEvaluator implements Evaluator {
         this.maxX = maxX;
     }
 
-    public void setStep(double newStep){
-        if (!Double.isFinite(newStep)){
-            throw new IllegalArgumentException("step should be finite double, got "+newStep);
+    public void setStep(double newStep) {
+        if (!Double.isFinite(newStep)) {
+            throw new IllegalArgumentException("step should be finite double, got " + newStep);
         }
         step = newStep;
     }

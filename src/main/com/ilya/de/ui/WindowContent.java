@@ -1,10 +1,6 @@
 package com.ilya.de.ui;
 
 import com.ilya.de.math.graph.GraphProvider;
-import javafx.beans.value.ChangeListener;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
@@ -12,8 +8,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.input.InputEvent;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -33,7 +27,7 @@ public class WindowContent {
         void onDataChanged(double newValue);
     }
 
-    public interface OnFunctionChangeListener{
+    public interface OnFunctionChangeListener {
         void onFunctionChanged(String newFunction);
     }
 
@@ -94,7 +88,7 @@ public class WindowContent {
         solutionFuncField = new TextField();
         solutionFuncField.setPrefWidth(toolbarWidth);
         solutionFuncField.setOnAction(event -> {
-            if (solutionChangeListener==null) return;
+            if (solutionChangeListener == null) return;
             solutionChangeListener.onFunctionChanged(solutionFuncField.getCharacters().toString());
         });
         solutionFuncBox.getChildren().add(solutionFuncDescription);
@@ -106,6 +100,10 @@ public class WindowContent {
         sourceFuncDescription.setFont(Font.font("monospaced"));
         sourceFuncField = new TextField();
         sourceFuncField.setPrefWidth(toolbarWidth);
+        sourceFuncField.setOnAction(event -> {
+            if (sourceChangeListener == null) return;
+            sourceChangeListener.onFunctionChanged(sourceFuncField.getCharacters().toString());
+        });
         sourceFuncBox.getChildren().add(sourceFuncDescription);
         sourceFuncBox.getChildren().add(sourceFuncField);
         functionsBox.getChildren().add(sourceFuncBox);
@@ -140,18 +138,18 @@ public class WindowContent {
                              OnDataInputChangeListener listener) {
         HBox content = new HBox();
         Text name = new Text(nameStr);
-        TextField field = new TextField(String.format("%f",initialValue));
+        TextField field = new TextField(String.format("%f", initialValue));
         field.setPrefWidth(toolbarWidth);
         field.setOnAction(event -> {
-            updateDataValue(field,0,minValue,maxValue,listener);
+            updateDataValue(field, 0, minValue, maxValue, listener);
         });
         Button minusValue = new Button("-");
         minusValue.setOnMouseClicked((event) -> {
-            updateDataValue(field,-step,minValue,maxValue,listener);
+            updateDataValue(field, -step, minValue, maxValue, listener);
         });
         Button plusValue = new Button("+");
         plusValue.setOnMouseClicked((event) -> {
-            updateDataValue(field,step,minValue,maxValue,listener);
+            updateDataValue(field, step, minValue, maxValue, listener);
         });
         content.getChildren().add(name);
         content.getChildren().add(field);
@@ -160,19 +158,19 @@ public class WindowContent {
         dataContainer.getChildren().add(content);
     }
 
-    private void updateDataValue(TextField source,double change,double min,double max,
-                                 OnDataInputChangeListener listener){
-        if (listener==null) return;
+    private void updateDataValue(TextField source, double change, double min, double max,
+                                 OnDataInputChangeListener listener) {
+        if (listener == null) return;
         double value = Double.NaN;
-        try{
+        try {
             value = Double.parseDouble(source.getCharacters().toString());
-        }catch (Throwable throwable){
+        } catch (Throwable throwable) {
 
         }
         if (Double.isNaN(value)) return;
-        double result = Math.min(max, Math.max(min,value+change));
+        double result = Math.min(max, Math.max(min, value + change));
         listener.onDataChanged(result);
-        source.setText(String.format("%f",result));
+        source.setText(String.format("%f", result));
     }
 
     public void addGraphOption(String text, Color color, GraphProvider provider,

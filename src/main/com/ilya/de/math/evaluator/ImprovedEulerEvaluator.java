@@ -22,7 +22,7 @@ public class ImprovedEulerEvaluator extends AbstractSyncEvaluator implements Y0A
         double tempY = 0;
         points.add(new Point(currentX, lastY));
         while (currentX <= maxX) {
-            if (!Double.isFinite(lastY)){
+            if (!Double.isFinite(lastY)) {
                 lastY = tryToSynchronize(currentX);
             }
             tempY = lastY + step * function.func(currentX, lastY);

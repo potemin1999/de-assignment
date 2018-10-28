@@ -53,6 +53,7 @@ public class GraphWindow {
         stage.widthProperty().addListener(this::onStageWidthUpdated);
         stage.heightProperty().addListener(this::onStageHeightUpdated);
         stage.show();
+        stage.toFront();
     }
 
     private void onStageWidthUpdated(ObservableValue<? extends Number> observable, Number oldWidth, Number newWidth) {

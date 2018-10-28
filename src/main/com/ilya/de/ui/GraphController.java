@@ -2,7 +2,7 @@ package com.ilya.de.ui;
 
 import com.ilya.de.math.graph.GraphProvider;
 import com.ilya.de.math.graph.Point;
-import com.ilya.de.math.function.Graph;
+import com.ilya.de.math.graph.Graph;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
@@ -11,7 +11,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import jdk.internal.math.FormattedFloatingDecimal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -96,12 +95,12 @@ public class GraphController {
         drawGraph(true);
     }
 
-    public void drawGraph(boolean recomputeGraph){
+    public void drawGraph(boolean recomputeGraph) {
         if (graphView == null) return;
-        drawGraph(graphicsContext,recomputeGraph);
+        drawGraph(graphicsContext, recomputeGraph);
     }
 
-    private void drawGraph(GraphicsContext context,boolean recomputeGraphs) {
+    private void drawGraph(GraphicsContext context, boolean recomputeGraphs) {
         context.setFill(Color.WHITE);
         context.fillRect(0, 0, graphView.getWidth(), graphView.getHeight());
         context.setStroke(Color.BLACK);
@@ -121,14 +120,14 @@ public class GraphController {
         drawCoordinateAxisAndGrid(context);
     }
 
-    private double getStep(double zoom){
+    private double getStep(double zoom) {
         double base = 10;
-        return Math.pow(base,Math.round(Math.log(zoom)/Math.log(base)));
+        return Math.pow(base, Math.round(Math.log(zoom) / Math.log(base)));
     }
 
     private DecimalFormat format = new DecimalFormat();
 
-    private String getCoordinateWithStep(double coord,double step){
+    private String getCoordinateWithStep(double coord, double step) {
         return format.format(coord);
     }
 
@@ -139,44 +138,44 @@ public class GraphController {
         double xStep = getStep(zoomX);
         double yStep = getStep(zoomY);
         double leftMostCoordinate = convertToGraphX(0);
-        double startXCoordinate = xStep*(Math.floor(leftMostCoordinate/xStep));
+        double startXCoordinate = xStep * (Math.floor(leftMostCoordinate / xStep));
         double rightMostCoordinate = convertToGraphX(canvasWidth);
-        double endXCoordinate = xStep*(Math.ceil(rightMostCoordinate/xStep));
+        double endXCoordinate = xStep * (Math.ceil(rightMostCoordinate / xStep));
         double topMostCoordinate = convertToGraphY(0);
-        double endYCoordinate = yStep*(Math.ceil(topMostCoordinate/yStep));
+        double endYCoordinate = yStep * (Math.ceil(topMostCoordinate / yStep));
         double bottomMostCoordinate = convertToGraphY(canvasHeight);
-        double startYCoordinate = yStep*(Math.floor(bottomMostCoordinate/yStep));
+        double startYCoordinate = yStep * (Math.floor(bottomMostCoordinate / yStep));
         double zeroX = convertFromGraphX(0);
         double zeroY = convertFromGraphY(0);
         context.setLineWidth(2.0);
-        context.strokeLine(convertFromGraphX(leftMostCoordinate),zeroY,
-                convertFromGraphX(rightMostCoordinate),zeroY);
-        context.strokeLine(zeroX,convertFromGraphY(topMostCoordinate),
-                zeroX,convertFromGraphY(bottomMostCoordinate));
-        for (double i = startXCoordinate; i < endXCoordinate + 1; i+=xStep) {
+        context.strokeLine(convertFromGraphX(leftMostCoordinate), zeroY,
+                convertFromGraphX(rightMostCoordinate), zeroY);
+        context.strokeLine(zeroX, convertFromGraphY(topMostCoordinate),
+                zeroX, convertFromGraphY(bottomMostCoordinate));
+        for (double i = startXCoordinate; i < endXCoordinate + 1; i += xStep) {
             double endX = convertFromGraphX(i);
             context.setLineWidth(0.5);
             context.strokeLine(endX, 0, endX, canvasHeight);
             context.setLineWidth(1.0);
             context.strokeLine(endX, zeroY + 2, endX, zeroY - 2);
             {
-                String coordStr = getCoordinateWithStep(i,xStep);
-                double textX = endX+textXOffset;
-                double textY = Math.min(Math.max(16,zeroY+textYOffset),canvasHeight-28);
-                context.fillText(coordStr, textX,textY);
+                String coordStr = getCoordinateWithStep(i, xStep);
+                double textX = endX + textXOffset;
+                double textY = Math.min(Math.max(16, zeroY + textYOffset), canvasHeight - 28);
+                context.fillText(coordStr, textX, textY);
             }
         }
-        for (double j = startYCoordinate; j < endYCoordinate + 1; j+=yStep) {
+        for (double j = startYCoordinate; j < endYCoordinate + 1; j += yStep) {
             double endY = convertFromGraphY(j);
             context.setLineWidth(0.5);
             context.strokeLine(0, endY, canvasWidth, endY);
             context.setLineWidth(1.0);
             context.strokeLine(zeroX + 2, endY, zeroX - 2, endY);
             {
-                String coordStr = getCoordinateWithStep(j,yStep);
-                double textX = Math.min(Math.max(2,zeroX+textXOffset),canvasWidth-30);
+                String coordStr = getCoordinateWithStep(j, yStep);
+                double textX = Math.min(Math.max(2, zeroX + textXOffset), canvasWidth - 30);
                 double textY = endY + textYOffset;
-                context.fillText(coordStr, textX,textY);
+                context.fillText(coordStr, textX, textY);
             }
         }
         context.setLineWidth(2.0);
@@ -199,7 +198,7 @@ public class GraphController {
     }
 
     private void handleScroll(ScrollEvent event) {
-        double dZoom = event.getDeltaY() > 0 ? 1.2 : 0.8;
+        double dZoom = event.getDeltaY() < 0 ? 1.2 : 0.8;
         zoom *= dZoom;
         zoomX *= dZoom;
         zoomY *= dZoom;

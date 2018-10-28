@@ -1,7 +1,7 @@
 import com.ilya.de.math.evaluator.EulerEvaluator;
 import com.ilya.de.math.evaluator.RungeKuttaEvaluator;
 import com.ilya.de.math.function.Function2Generator;
-import com.ilya.de.math.function.Graph;
+import com.ilya.de.math.graph.Graph;
 import com.ilya.de.math.graph.FunctionGraphProviderWithY0;
 import com.ilya.de.math.graph.GraphProvider;
 import org.junit.Test;

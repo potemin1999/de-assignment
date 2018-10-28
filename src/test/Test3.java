@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 public class Test3 {
 
     @Test
-    public void test1(){
+    public void test1() {
         Predicate<String> p = s -> !s.equals("s");
         p = p.and(t -> true);
         System.out.println(p.test("s"));
@@ -14,7 +14,7 @@ public class Test3 {
     }
 
     @Test
-    public void test2(){
+    public void test2() {
 
     }
 }

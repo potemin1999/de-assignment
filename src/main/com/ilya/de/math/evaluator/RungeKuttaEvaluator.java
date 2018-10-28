@@ -20,7 +20,7 @@ public class RungeKuttaEvaluator extends AbstractSyncEvaluator implements Y0Acce
         double lastY = y0;
         points.add(new Point(currentX, lastY));
         while (currentX <= maxX) {
-            if (!Double.isFinite(lastY)){
+            if (!Double.isFinite(lastY)) {
                 lastY = tryToSynchronize(currentX);
             }
             double x = currentX;

@@ -1,11 +1,17 @@
 package com.ilya.de.math.graph;
 
-import com.ilya.de.math.function.Graph;
-
 public interface GraphProvider {
 
+    /**
+     * @param redraw
+     * @return
+     */
     Graph getGraph(boolean redraw);
 
+    /**
+     * ask "say my name", it will
+     * @return it's name
+     */
     String getName();
 
 }

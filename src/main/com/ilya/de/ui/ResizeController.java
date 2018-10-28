@@ -23,13 +23,13 @@ public class ResizeController {
         double toolbarHeight = height;
         double graphWidth = width - toolbarWidth;
         double graphHeight = height;
-        windowContent.getGraphView().resize(graphWidth,graphHeight);
-        if (graphResizeListener!=null){
-            graphResizeListener.onResize(graphWidth,graphHeight);
+        windowContent.getGraphView().resize(graphWidth, graphHeight);
+        if (graphResizeListener != null) {
+            graphResizeListener.onResize(graphWidth, graphHeight);
         }
-        windowContent.getToolbar().resize(toolbarWidth,toolbarHeight);
-        if (toolbarResizeListener!=null){
-            toolbarResizeListener.onResize(toolbarWidth,toolbarHeight);
+        windowContent.getToolbar().resize(toolbarWidth, toolbarHeight);
+        if (toolbarResizeListener != null) {
+            toolbarResizeListener.onResize(toolbarWidth, toolbarHeight);
         }
     }
 

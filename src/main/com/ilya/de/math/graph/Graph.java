@@ -1,6 +1,5 @@
-package com.ilya.de.math.function;
+package com.ilya.de.math.graph;
 
-import com.ilya.de.math.graph.Point;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

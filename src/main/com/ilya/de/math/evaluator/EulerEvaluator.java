@@ -21,9 +21,9 @@ public class EulerEvaluator extends AbstractSyncEvaluator implements Y0Accepting
         double lastY = y0;
         points.add(new Point(currentX, lastY));
         while (currentX < maxX) {
-            Point point = new Point(0,0);
+            Point point = new Point(0, 0);
             double currentStep = step;
-            if (!Double.isFinite(lastY)){
+            if (!Double.isFinite(lastY)) {
                 lastY = tryToSynchronize(currentX);
             }
             double funcRes = function.func(currentX, lastY);

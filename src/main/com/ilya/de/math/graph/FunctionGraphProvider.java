@@ -2,7 +2,6 @@ package com.ilya.de.math.graph;
 
 import com.ilya.de.math.evaluator.Evaluator;
 import com.ilya.de.math.function.Function2;
-import com.ilya.de.math.function.Graph;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,9 +14,9 @@ public class FunctionGraphProvider implements GraphProvider {
     @Setter
     private String name;
 
-    public <T extends Evaluator> FunctionGraphProvider(String name,T evaluator, double startX,
+    public <T extends Evaluator> FunctionGraphProvider(String name, T evaluator, double startX,
                                                        double endX, double step, Function2 function) {
-        this(evaluator,startX,endX,step,function);
+        this(evaluator, startX, endX, step, function);
         this.name = name;
     }
 
@@ -34,9 +33,9 @@ public class FunctionGraphProvider implements GraphProvider {
         if (redraw || cached == null) {
             try {
                 cached = new Graph(evaluator.evaluate());
-            }catch(Throwable throwable){
+            } catch (Throwable throwable) {
                 throwable.printStackTrace();
-                System.err.println("problem with evaluator:"+evaluator.toString());
+                System.err.println("problem with evaluator:" + evaluator.toString());
             }
         }
         return cached;

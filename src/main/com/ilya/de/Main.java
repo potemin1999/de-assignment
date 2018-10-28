@@ -18,11 +18,11 @@ public class Main extends Application {
     RungeKuttaEvaluator rungeKuttaEvaluator = new RungeKuttaEvaluator();
     FunctionEvaluator solutionEvaluator = new FunctionEvaluator();
     Evaluator eulerErrorEvaluator =
-            new FunctionDifferenceEvaluator(solutionEvaluator,eulerEvaluator);
+            new FunctionDifferenceEvaluator(solutionEvaluator, eulerEvaluator);
     Evaluator improvedEulerErrorEvaluator =
-            new FunctionDifferenceEvaluator(solutionEvaluator,improvedEulerEvaluator);
+            new FunctionDifferenceEvaluator(solutionEvaluator, improvedEulerEvaluator);
     Evaluator rungeKuttaErrorEvaluator =
-            new FunctionDifferenceEvaluator(solutionEvaluator,rungeKuttaEvaluator);
+            new FunctionDifferenceEvaluator(solutionEvaluator, rungeKuttaEvaluator);
 
     Function2 sourceFunction;
     Function2 solutionFunction;
@@ -66,56 +66,56 @@ public class Main extends Application {
 
         GraphProvider eulerGraphProvider = new FunctionGraphProviderWithY0(EulerEvaluator.NAME,
                 eulerEvaluator, y0, x0, X, step, sourceFunction);
-        GraphProvider eulerErrorGraphProvider = new FunctionGraphProvider(EulerEvaluator.NAME+" Error",
-                eulerErrorEvaluator, x0,X,step,null);
+        GraphProvider eulerErrorGraphProvider = new FunctionGraphProvider(EulerEvaluator.NAME + " Error",
+                eulerErrorEvaluator, x0, X, step, null);
         GraphProvider improvedEulerGraphProvider = new FunctionGraphProviderWithY0(ImprovedEulerEvaluator.NAME,
-                improvedEulerEvaluator, y0,x0,X, step, sourceFunction);
-        GraphProvider improvedEulerErrorGraphProvider = new FunctionGraphProvider(ImprovedEulerEvaluator.NAME+" Error",
-                improvedEulerErrorEvaluator,x0,X,step,null);
+                improvedEulerEvaluator, y0, x0, X, step, sourceFunction);
+        GraphProvider improvedEulerErrorGraphProvider = new FunctionGraphProvider(ImprovedEulerEvaluator.NAME + " Error",
+                improvedEulerErrorEvaluator, x0, X, step, null);
         GraphProvider rungeKuttaGraphProvider = new FunctionGraphProviderWithY0(RungeKuttaEvaluator.NAME,
                 rungeKuttaEvaluator, 2, -5, 0, step, sourceFunction);
         GraphProvider rungeKuttaErrorGraphProvider = new FunctionGraphProvider(RungeKuttaEvaluator.NAME + " Error",
-                rungeKuttaErrorEvaluator,x0,X,step,null);
+                rungeKuttaErrorEvaluator, x0, X, step, null);
 
         GraphProvider exactSolution = new FunctionGraphProvider(
                 solutionEvaluator, -5, 0, step, solutionFunction);
 
         windowContent.addGraphOption(EulerEvaluator.NAME + " Method", Color.GREEN, eulerGraphProvider,
                 toolbarController::onGraphOptionChanged, true);
-        windowContent.addGraphOption(EulerEvaluator.NAME+" Method Error",Color.VIOLET,eulerErrorGraphProvider,
-                toolbarController::onGraphOptionChanged,false);
+        windowContent.addGraphOption(EulerEvaluator.NAME + " Method Error", Color.VIOLET, eulerErrorGraphProvider,
+                toolbarController::onGraphOptionChanged, false);
         windowContent.addGraphOption(ImprovedEulerEvaluator.NAME + " Method", Color.RED, improvedEulerGraphProvider,
                 toolbarController::onGraphOptionChanged, true);
-        windowContent.addGraphOption(ImprovedEulerEvaluator.NAME+" Method Error",Color.YELLOW,
-                improvedEulerErrorGraphProvider,toolbarController::onGraphOptionChanged,false);
+        windowContent.addGraphOption(ImprovedEulerEvaluator.NAME + " Method Error", Color.YELLOW,
+                improvedEulerErrorGraphProvider, toolbarController::onGraphOptionChanged, false);
         windowContent.addGraphOption(RungeKuttaEvaluator.NAME + " Method", Color.BLUE, rungeKuttaGraphProvider,
                 toolbarController::onGraphOptionChanged, true);
-        windowContent.addGraphOption(RungeKuttaEvaluator.NAME+" Method Error",Color.CYAN, rungeKuttaErrorGraphProvider,
+        windowContent.addGraphOption(RungeKuttaEvaluator.NAME + " Method Error", Color.CYAN, rungeKuttaErrorGraphProvider,
                 toolbarController::onGraphOptionChanged, false);
         windowContent.addGraphOption("Solution", Color.BLACK, exactSolution,
                 toolbarController::onGraphOptionChanged, true);
 
-        windowContent.addDataInput("x0",x0,
-                -Double.MAX_VALUE,Double.MAX_VALUE, 1,this::onX0Changed);
-        windowContent.addDataInput("X",X,
-                -Double.MAX_VALUE,Double.MAX_VALUE,1,this::onXChanged);
-        windowContent.addDataInput("y0",y0,
-                -Double.MAX_VALUE,Double.MAX_VALUE,1,this::onY0Changed);
-        windowContent.addDataInput("step",step,
-                0.0001,1,0.01,this::onStepChanged);
+        windowContent.addDataInput("x0", x0,
+                -Double.MAX_VALUE, Double.MAX_VALUE, 1, this::onX0Changed);
+        windowContent.addDataInput("X", X,
+                -Double.MAX_VALUE, Double.MAX_VALUE, 1, this::onXChanged);
+        windowContent.addDataInput("y0", y0,
+                -Double.MAX_VALUE, Double.MAX_VALUE, 1, this::onY0Changed);
+        windowContent.addDataInput("step", step,
+                0.0001, 1, 0.01, this::onStepChanged);
 
         window.show();
         controller.drawGraph();
     }
 
-    public void onSolutionFunctionChanged(String funcStr){
+    public void onSolutionFunctionChanged(String funcStr) {
         solutionFunction = Function2Generator.gen(funcStr);
         solutionEvaluator.setFunction(solutionFunction);
         Evaluator[] evaluators = new Evaluator[]{
                 eulerEvaluator,
                 improvedEulerEvaluator,
                 rungeKuttaEvaluator,};
-        for (Evaluator evaluator : evaluators){
+        for (Evaluator evaluator : evaluators) {
             if (evaluator instanceof AbstractSyncEvaluator) {
                 ((AbstractSyncEvaluator) evaluator).setSyncEvaluator(solutionEvaluator);
             }
@@ -123,7 +123,7 @@ public class Main extends Application {
         controller.drawGraph();
     }
 
-    public void onSourceFunctionChanged(String funcStr){
+    public void onSourceFunctionChanged(String funcStr) {
         sourceFunction = Function2Generator.gen(funcStr);
         eulerEvaluator.setFunction(sourceFunction);
         improvedEulerEvaluator.setFunction(sourceFunction);
@@ -131,27 +131,27 @@ public class Main extends Application {
         controller.drawGraph();
     }
 
-    public void onStepChanged(double newValue){
+    public void onStepChanged(double newValue) {
         step = newValue;
         updateEvaluatorData();
     }
 
-    public void onY0Changed(double newValue){
+    public void onY0Changed(double newValue) {
         y0 = newValue;
         updateEvaluatorData();
     }
 
-    public void onX0Changed(double newValue){
+    public void onX0Changed(double newValue) {
         x0 = newValue;
         updateEvaluatorData();
     }
 
-    public void onXChanged(double newValue){
+    public void onXChanged(double newValue) {
         X = newValue;
         updateEvaluatorData();
     }
 
-    public void updateEvaluatorData(){
+    public void updateEvaluatorData() {
         Evaluator[] evaluators = new Evaluator[]{
                 solutionEvaluator,
                 eulerEvaluator,
@@ -160,10 +160,10 @@ public class Main extends Application {
                 improvedEulerErrorEvaluator,
                 rungeKuttaEvaluator,
                 rungeKuttaErrorEvaluator};
-        for (Evaluator evaluator : evaluators){
+        for (Evaluator evaluator : evaluators) {
             evaluator.setStep(step);
-            evaluator.setInterval(x0,X);
-            if (evaluator instanceof Y0AcceptingEvaluator){
+            evaluator.setInterval(x0, X);
+            if (evaluator instanceof Y0AcceptingEvaluator) {
                 ((Y0AcceptingEvaluator) evaluator).setY0(y0);
             }
         }
