@@ -18,6 +18,13 @@ public class ResizeController {
     @Setter
     private GraphWindow.OnResizeListener toolbarResizeListener;
 
+    /**
+     * called on window resize
+     * computes new UI elements size
+     *
+     * @param width  to apply
+     * @param height to apply
+     */
     public void doContentResize(double width, double height) {
         double toolbarWidth = windowContent.getToolbarWidth();
         double toolbarHeight = height;

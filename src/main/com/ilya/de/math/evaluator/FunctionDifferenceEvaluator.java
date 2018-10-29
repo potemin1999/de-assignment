@@ -10,6 +10,12 @@ public class FunctionDifferenceEvaluator extends AbstractEvaluator {
     private Evaluator evaluatorA;
     private Evaluator evaluatorB;
 
+    /**
+     * computes difference with f1 and f2 points
+     *
+     * @param f1 a evaluator
+     * @param f2 b evaluator
+     */
     public FunctionDifferenceEvaluator(Evaluator f1, Evaluator f2) {
         evaluatorA = f1;
         evaluatorB = f2;

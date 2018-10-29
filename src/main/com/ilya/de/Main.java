@@ -11,33 +11,42 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    GraphController controller;
+    /**
+     * variables, required to bind all parts together
+     */
+    private GraphController controller;
+    private WindowContent windowContent;
 
-    EulerEvaluator eulerEvaluator = new EulerEvaluator();
-    ImprovedEulerEvaluator improvedEulerEvaluator = new ImprovedEulerEvaluator();
-    RungeKuttaEvaluator rungeKuttaEvaluator = new RungeKuttaEvaluator();
-    FunctionEvaluator solutionEvaluator = new FunctionEvaluator();
-    Evaluator eulerErrorEvaluator =
+    private EulerEvaluator eulerEvaluator = new EulerEvaluator();
+    private ImprovedEulerEvaluator improvedEulerEvaluator = new ImprovedEulerEvaluator();
+    private RungeKuttaEvaluator rungeKuttaEvaluator = new RungeKuttaEvaluator();
+    private FunctionEvaluator solutionEvaluator = new FunctionEvaluator();
+    private Evaluator eulerErrorEvaluator =
             new FunctionDifferenceEvaluator(solutionEvaluator, eulerEvaluator);
-    Evaluator improvedEulerErrorEvaluator =
+    private Evaluator improvedEulerErrorEvaluator =
             new FunctionDifferenceEvaluator(solutionEvaluator, improvedEulerEvaluator);
-    Evaluator rungeKuttaErrorEvaluator =
+    private Evaluator rungeKuttaErrorEvaluator =
             new FunctionDifferenceEvaluator(solutionEvaluator, rungeKuttaEvaluator);
 
-    Function2 sourceFunction;
-    Function2 solutionFunction;
-    double x0 = -5;
-    double y0 = 2;
-    double X = 0;
-    double step = 0.005;
-    String solutionFunctionStr = "1/(0-4.498309818-x) + exp(x)";
-    String sourceFunctionStr = "(1-2*y)*exp(x) + y*y + exp(2*x)";
+    private Function2 sourceFunction;
+    private Function2 solutionFunction;
+    private double x0 = -5;
+    private double y0 = 2;
+    private double X = 0;
+    private double step = 0.005;
+    private final String solutionFunctionStr = "1/(0-4.498309818-x) + exp(x)";
+    private final String sourceFunctionStr = "(1-2*y)*exp(x) + y*y + exp(2*x)";
 
+    /**
+     * build up a window, create a graphs, add listeners
+     *
+     * @param primaryStage used to create a window
+     */
     @Override
     public void start(Stage primaryStage) {
         double width = 1000.0;
         double height = 680.0;
-        WindowContent windowContent = new WindowContent(width, height);
+        windowContent = new WindowContent(width, height);
         controller = new GraphController();
         controller.setGraphView(windowContent.getGraphView());
         controller.setCenter(new Point(0, 0));
@@ -108,8 +117,17 @@ public class Main extends Application {
         controller.drawGraph();
     }
 
+    /**
+     * called, when user wants new solution function processed
+     *
+     * @param funcStr new func
+     */
     public void onSolutionFunctionChanged(String funcStr) {
         solutionFunction = Function2Generator.gen(funcStr);
+        if (solutionFunction == null) {
+            windowContent.showError("Unable to parse y(x) function");
+            return;
+        }
         solutionEvaluator.setFunction(solutionFunction);
         Evaluator[] evaluators = new Evaluator[]{
                 eulerEvaluator,
@@ -123,14 +141,24 @@ public class Main extends Application {
         controller.drawGraph();
     }
 
+    /**
+     * called, when user wants new source function
+     *
+     * @param funcStr new source function
+     */
     public void onSourceFunctionChanged(String funcStr) {
         sourceFunction = Function2Generator.gen(funcStr);
+        if (sourceFunction == null) {
+            windowContent.showError("Unable to parse f(x,y) function");
+            return;
+        }
         eulerEvaluator.setFunction(sourceFunction);
         improvedEulerEvaluator.setFunction(sourceFunction);
         rungeKuttaEvaluator.setFunction(sourceFunction);
         controller.drawGraph();
     }
 
+    //next methods are called, when input values were changed
     public void onStepChanged(double newValue) {
         step = newValue;
         updateEvaluatorData();
@@ -151,6 +179,9 @@ public class Main extends Application {
         updateEvaluatorData();
     }
 
+    /**
+     * updates input data for all evaluators
+     */
     public void updateEvaluatorData() {
         Evaluator[] evaluators = new Evaluator[]{
                 solutionEvaluator,
@@ -170,6 +201,11 @@ public class Main extends Application {
         controller.drawGraph();
     }
 
+    /**
+     * entry point of program
+     *
+     * @param args ignored
+     */
     public static void main(String[] args) {
         launch(args);
     }

@@ -15,6 +15,14 @@ public class ToolbarController {
 
     }
 
+    /**
+     * called when graph checkbox changed
+     *
+     * @param provider attached
+     * @param color    corresponds to graph
+     * @param oldValue old checkbox value
+     * @param newValue new checkbox value
+     */
     public void onGraphOptionChanged(GraphProvider provider, Color color,
                                      Boolean oldValue, Boolean newValue) {
         if (oldValue == newValue) return;

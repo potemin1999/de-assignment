@@ -5,9 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,14 +18,17 @@ import lombok.Setter;
 public class WindowContent {
 
     public interface OnGraphOptionChangeListener {
+
         void onGraphOptionChanged(GraphProvider provider, Color color, boolean oldValue, boolean newValue);
     }
 
     public interface OnDataInputChangeListener {
+
         void onDataChanged(double newValue);
     }
 
     public interface OnFunctionChangeListener {
+
         void onFunctionChanged(String newFunction);
     }
 
@@ -37,7 +38,6 @@ public class WindowContent {
     @Getter
     private final Canvas graphView;
     private Text title;
-    private FlowPane toolbarDescription;
 
     @Getter
     private double toolbarWidth;
@@ -191,6 +191,14 @@ public class WindowContent {
         content.getChildren().add(textBox);
         graphsContainer.getChildren().add(content);
         checkBox.setSelected(defaultValue);
+    }
+
+    public void showError(String error) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Error occurred");
+        alert.setContentText(error);
+        alert.setResult(ButtonType.CLOSE);
+        alert.showAndWait();
     }
 
     public Parent getParent() {

@@ -9,10 +9,12 @@ public class Point {
 
     @Getter
     @Setter
+    //x coordinate
     private double x;
 
     @Getter
     @Setter
+    //y coordinate
     private double y;
 
 }

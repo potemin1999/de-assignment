@@ -15,11 +15,22 @@ public class Function2Generator {
     private final Tokenizer tokenizer;
     private final ShuntingYard shuntingYard;
     private final boolean debug;
+    // class counter for unique function class names
     private static int classCounter = 0;
+    //loader of new functions
     private static final FunctionClassLoader funcLoader = new FunctionClassLoader();
 
+    /**
+     * @param func text source of func
+     * @return Function2, generated from func string
+     */
     public static Function2 gen(String func) {
-        return new Function2Generator().generate(func);
+        try {
+            return new Function2Generator().generate(func);
+        } catch (Throwable throwable) {
+            System.out.println("unable to generate function for the input " + func);
+            return null;
+        }
     }
 
     public Function2Generator() {

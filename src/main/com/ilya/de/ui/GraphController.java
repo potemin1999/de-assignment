@@ -20,39 +20,63 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * can make a plotter surface from the simple canvas
+ */
 @NoArgsConstructor
 public class GraphController {
 
     @Getter
+    // surface
     private Canvas graphView;
+    // cached graphic context to draw onto
     private GraphicsContext graphicsContext;
 
+    // graph providers which will be asked to return a graph
     private List<GraphProvider> graphProviders = new ArrayList<>(16);
+    // corresponding colors of graphs
     private List<Color> graphColors = new ArrayList<>(16);
 
     @Getter
     @Setter
+    // point at the center of screen in graph surface coordinates
     private Point center = new Point(0, 0);
 
     @Getter
     @Setter
+    // current total zoom, zoom of X and y axis
     private double zoom = 1;
     private double zoomX = 1;
     private double zoomY = 1;
 
+    //pixels per [0;1] interval for zoom=1
     private final double pixelsPerCell = 100;
 
+    // cached last click point coordinates, used in drag event processing
     private double clickLastX;
     private double clickLastY;
 
+    // canvas size, used in graph->canvas and canvas->graph coordinate translation
     private double canvasWidth = 0;
     private double canvasHeight = 0;
 
+    /**
+     * add new graph provider with corresponding color
+     *
+     * @param graphProvider to add
+     * @param color         corresponding to graph
+     */
     public void addGraphProvider(GraphProvider graphProvider, Color color) {
         graphProviders.add(graphProvider);
         graphColors.add(color);
     }
 
+    /**
+     * called from outsize when canvas was resized
+     *
+     * @param width  new width
+     * @param height new height
+     */
     public void onCanvasResized(double width, double height) {
         canvasWidth = width;
         canvasHeight = height;
@@ -61,6 +85,11 @@ public class GraphController {
         drawGraph();
     }
 
+    /**
+     * removes graph provides from draw list
+     *
+     * @param graphProvider to remove
+     */
     public void removeGraphProvider(GraphProvider graphProvider) {
         int index = graphProviders.indexOf(graphProvider);
         if (index == -1) return;
@@ -68,6 +97,12 @@ public class GraphController {
         graphColors.remove(index);
     }
 
+    /**
+     * removes graph provider by name
+     *
+     * @param name of graph provider to remove
+     * @return true if provider was found and removed, false otherwise
+     */
     public boolean removeGraphProviderByName(String name) {
         for (GraphProvider provider : graphProviders) {
             if (name.equals(provider.getName())) {
@@ -78,11 +113,15 @@ public class GraphController {
         return false;
     }
 
+    /**
+     * set new canvas
+     *
+     * @param graphView to draw on
+     */
     public void setGraphView(Canvas graphView) {
         this.graphView = graphView;
         this.graphView.setFocusTraversable(true);
         this.graphicsContext = graphView.getGraphicsContext2D();
-        this.graphView.addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleClick);
         this.graphView.addEventHandler(MouseEvent.MOUSE_PRESSED, this::handleMousePressed);
         this.graphView.addEventHandler(MouseEvent.MOUSE_DRAGGED, this::handleDrag);
         this.graphView.addEventHandler(ScrollEvent.SCROLL, this::handleScroll);
@@ -91,15 +130,29 @@ public class GraphController {
         this.canvasHeight = graphView.getHeight();
     }
 
+    /**
+     * call it, when your graphs were updated
+     */
     public void drawGraph() {
         drawGraph(true);
     }
 
+    /**
+     * call it, when you want to refresh render
+     *
+     * @param recomputeGraph whether graphs should be recomputed
+     */
     public void drawGraph(boolean recomputeGraph) {
         if (graphView == null) return;
         drawGraph(graphicsContext, recomputeGraph);
     }
 
+    /**
+     * draw graphs, using GraphicContent and recompute request
+     *
+     * @param context         GraphicContext for drawing
+     * @param recomputeGraphs request to recompute graphs
+     */
     private void drawGraph(GraphicsContext context, boolean recomputeGraphs) {
         context.setFill(Color.WHITE);
         context.fillRect(0, 0, graphView.getWidth(), graphView.getHeight());
@@ -115,22 +168,42 @@ public class GraphController {
         }
     }
 
+    /**
+     * draw coordinates
+     *
+     * @param context to draw
+     */
     private void drawCoordinates(GraphicsContext context) {
         context.setLineWidth(1.0);
         drawCoordinateAxisAndGrid(context);
     }
 
+    /**
+     * @param zoom of X or Y axis
+     * @return grid step
+     */
     private double getStep(double zoom) {
         double base = 10;
         return Math.pow(base, Math.round(Math.log(zoom) / Math.log(base)));
     }
 
+    // this one used for formatted double representation
     private DecimalFormat format = new DecimalFormat();
 
+    /**
+     * @param coord coordinate to represent
+     * @param step  unused
+     * @return same coordinate, but in String type
+     */
     private String getCoordinateWithStep(double coord, double step) {
         return format.format(coord);
     }
 
+    /**
+     * draws grid and coordinate axis
+     *
+     * @param context to draw on
+     */
     private void drawCoordinateAxisAndGrid(GraphicsContext context) {
         context.setFill(Color.BLACK);
         final double textXOffset = 4;
@@ -181,6 +254,13 @@ public class GraphController {
         context.setLineWidth(2.0);
     }
 
+    /**
+     * called for each graph
+     *
+     * @param context to draw on
+     * @param graph   to represent
+     * @param color   used for graph line
+     */
     private void drawGraphPoints(GraphicsContext context, Graph graph, Color color) {
         List<Point> points = graph.getPoints();
         Iterator<Point> iterator = points.iterator();
@@ -197,6 +277,11 @@ public class GraphController {
         }
     }
 
+    /**
+     * called when scroll event occurred
+     *
+     * @param event happen
+     */
     private void handleScroll(ScrollEvent event) {
         double dZoom = event.getDeltaY() < 0 ? 1.2 : 0.8;
         zoom *= dZoom;
@@ -205,17 +290,22 @@ public class GraphController {
         drawGraph(false);
     }
 
+    /**
+     * called when mouse event occurred
+     *
+     * @param event happen
+     */
     private void handleMousePressed(MouseEvent event) {
         clickLastX = event.getX();
         clickLastY = event.getY();
         graphView.requestFocus();
     }
 
-    @SuppressWarnings({"EmptyMethod", "unused"})
-    private void handleClick(MouseEvent event) {
-        //TODO: implement
-    }
-
+    /**
+     * called when mouse drag event occurred
+     *
+     * @param event to handle
+     */
     private void handleDrag(MouseEvent event) {
         double dx = event.getX() - clickLastX;
         double dy = event.getY() - clickLastY;
@@ -228,6 +318,9 @@ public class GraphController {
         drawGraph(false);
     }
 
+    /**
+     * @param event key event to handle
+     */
     private void handleKeyPressed(KeyEvent event) {
         if (event.getCode() == KeyCode.W) {
             zoom *= 0.8;
@@ -242,6 +335,8 @@ public class GraphController {
         graphicsContext.setFont(new Font(graphicsContext.getFont().getName(), 10 / zoom));
         drawGraph(false);
     }
+
+    //next methods uses to convert coordinate from canvas space to the graph one
 
     private double convertToGraphX(double canvasX) {
         return center.getX() + (canvasX - canvasWidth * 0.5) * (zoomX / pixelsPerCell);

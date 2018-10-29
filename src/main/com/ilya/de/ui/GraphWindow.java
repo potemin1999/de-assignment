@@ -13,7 +13,15 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class GraphWindow {
 
+    // those, who wants to receive resize event, should implement this
     public interface OnResizeListener {
+
+        /**
+         * called when resize occurs
+         *
+         * @param newWidth  width
+         * @param newHeight height
+         */
         void onResize(double newWidth, double newHeight);
     }
 
@@ -30,6 +38,7 @@ public class GraphWindow {
     @Getter
     private double height = 480.0;
 
+    // resize listeners list
     private final List<OnResizeListener> onResizeListenerList;
 
     public GraphWindow() {
@@ -66,16 +75,29 @@ public class GraphWindow {
         notifyOnResize();
     }
 
+    /**
+     * call listeners
+     */
     private void notifyOnResize() {
         for (OnResizeListener listener : onResizeListenerList) {
             listener.onResize(width, height);
         }
     }
 
+    /**
+     * add new OnResizeListener
+     *
+     * @param listener to add
+     */
     public void addOnResizeListener(OnResizeListener listener) {
         onResizeListenerList.add(listener);
     }
 
+    /**
+     * removes OnResizeListener
+     *
+     * @param listener to remove
+     */
     public void removeOnResizeListener(OnResizeListener listener) {
         onResizeListenerList.remove(listener);
     }

@@ -1,9 +1,7 @@
 package com.ilya.de.math.evaluator;
 
 import com.ilya.de.math.graph.Point;
-import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,11 +11,20 @@ public abstract class AbstractSyncEvaluator extends AbstractEvaluator {
     boolean updateRequired = false;
     List<Point> points;
 
+    /**
+     * @param syncEvaluator to synchronize with
+     */
     public void setSyncEvaluator(Evaluator syncEvaluator) {
         this.syncEvaluator = syncEvaluator;
         updateRequired = true;
     }
 
+    /**
+     * called when evaluator is unable to find next point and wants some help
+     *
+     * @param currentX where Y value required
+     * @return NaN, if does not succeed, some value if does
+     */
     protected double tryToSynchronize(double currentX) {
         if (syncEvaluator == null) return Double.NaN;
         if (updateRequired) {
