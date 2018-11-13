@@ -16,6 +16,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -166,6 +169,9 @@ public class GraphController {
             Color color = colorIterator.next();
             drawGraphPoints(context, provider.getGraph(recomputeGraphs), color);
         }
+        if (recomputeGraphs) {
+            System.gc();
+        }
     }
 
     /**
@@ -183,12 +189,12 @@ public class GraphController {
      * @return grid step
      */
     private double getStep(double zoom) {
-        double base = 10;
+        double base = 5;
         return Math.pow(base, Math.round(Math.log(zoom) / Math.log(base)));
     }
 
     // this one used for formatted double representation
-    private DecimalFormat format = new DecimalFormat();
+    private FastDecimalFormat format = new FastDecimalFormat();
 
     /**
      * @param coord coordinate to represent
@@ -196,7 +202,9 @@ public class GraphController {
      * @return same coordinate, but in String type
      */
     private String getCoordinateWithStep(double coord, double step) {
-        return format.format(coord);
+        double step1 = 1.0 / step;
+        double base = 5;
+        return format.format(coord,(int) (Math.log(step1) / Math.log(base)));
     }
 
     /**
@@ -221,11 +229,12 @@ public class GraphController {
         double zeroX = convertFromGraphX(0);
         double zeroY = convertFromGraphY(0);
         context.setLineWidth(2.0);
-        context.strokeLine(convertFromGraphX(leftMostCoordinate), zeroY,
-                convertFromGraphX(rightMostCoordinate), zeroY);
-        context.strokeLine(zeroX, convertFromGraphY(topMostCoordinate),
-                zeroX, convertFromGraphY(bottomMostCoordinate));
-        for (double i = startXCoordinate; i < endXCoordinate + 1; i += xStep) {
+        context.strokeLine(0, zeroY,
+                canvasWidth, zeroY);
+        context.strokeLine(zeroX, 0,
+                zeroX, canvasHeight);
+
+        for (double i = startXCoordinate; i < endXCoordinate + xStep; i += xStep) {
             double endX = convertFromGraphX(i);
             context.setLineWidth(0.5);
             context.strokeLine(endX, 0, endX, canvasHeight);
@@ -238,7 +247,7 @@ public class GraphController {
                 context.fillText(coordStr, textX, textY);
             }
         }
-        for (double j = startYCoordinate; j < endYCoordinate + 1; j += yStep) {
+        for (double j = startYCoordinate; j < endYCoordinate + xStep; j += yStep) {
             double endY = convertFromGraphY(j);
             context.setLineWidth(0.5);
             context.strokeLine(0, endY, canvasWidth, endY);
@@ -246,7 +255,7 @@ public class GraphController {
             context.strokeLine(zeroX + 2, endY, zeroX - 2, endY);
             {
                 String coordStr = getCoordinateWithStep(j, yStep);
-                double textX = Math.min(Math.max(2, zeroX + textXOffset), canvasWidth - 30);
+                double textX = Math.min(Math.max(2, zeroX + textXOffset), canvasWidth - 8*coordStr.length());
                 double textY = endY + textYOffset;
                 context.fillText(coordStr, textX, textY);
             }
@@ -352,6 +361,64 @@ public class GraphController {
 
     private double convertFromGraphY(double graphY) {
         return canvasHeight * 0.5 + (center.getY() - graphY) / (zoomY / pixelsPerCell);
+    }
+
+    /**
+     * This custom double formatter was added due to
+     * huge memory consumption of the default String.format method
+     */
+    public static class FastDecimalFormat {
+
+        final double[] pow10 = new double[]{
+                1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
+        };
+
+        public String format(double value) {
+            return format(value, 5);
+        }
+
+        public String format(double value, int precision) {
+            if (precision < 0) precision = 0;
+            if (precision > 9) precision = 9;
+            boolean isNegative = false;
+            if (value < 0.0d) {
+                isNegative = true;
+                value = 0.0 - value;
+            }
+            long whole = (long) value;
+            double tmp = (value - whole) * pow10[precision];
+            long fraction = (long) tmp;
+            double diff = tmp - fraction;
+            if (diff > 0.5) {
+                ++fraction;
+                if (fraction >= pow10[precision]) {
+                    fraction = 0;
+                    ++whole;
+                }
+            } else if ((diff == 0.5) && ((fraction == 0) || (fraction & 1) == 1)) {
+                ++fraction;
+            }
+            StringBuilder sb = new StringBuilder(16);
+            if (fraction != 0) {
+                int count = precision;
+                do {
+                    --count;
+                    sb.append((char) ('0' + (fraction % 10)));
+                } while ((fraction /= 10) != 0);
+                while (count-- > 0) {
+                    sb.append('0');
+                }
+                sb.append('.');
+            }
+            do {
+                sb.append((char) ('0' + (whole % 10)));
+            } while ((whole /= 10) != 0);
+            if (isNegative) {
+                sb.append('-');
+            }
+            return sb.reverse().toString();
+        }
+
     }
 
 }
